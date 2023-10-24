@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable", 
+      "esnext"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "module": "es6",
+    "outDir": "lib",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@types": [
+        "@types"
+      ]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx", "src/modules.d.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
