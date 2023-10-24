@@ -15,6 +15,8 @@ import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import RectangleOutlinedIcon from '@mui/icons-material/RectangleOutlined';
 import DownloadIcon from '@mui/icons-material/Download';
+import AddCard from '@mui/icons-material/AddCard';
+
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -24,6 +26,7 @@ import Konva from 'konva';
 import { HistoryContext, useShapesContext } from '../context';
 import { ImageHandler } from '../components';
 import { JsonHandler } from '../components/JsonHandler';
+import { PSDHandler } from '../components/PSDHandler';
 
 const ToolbarBackground = styled('div')({
   backgroundColor: '#2c2c2c',
@@ -300,7 +303,22 @@ export const Toolbar = () => {
               </TooltipButton>
             </ButtonGroup>
 
+
             <ButtonGroup variant="contained" size="small">
+            <label htmlFor="parsing_psd">
+                <PSDHandler
+                  fileLoaded={(shapeArr) => {
+                    addShape(shapeArr);
+                  }}
+                />
+                <TooltipButton
+                  title="parsing PSD"
+                  component="span"
+                >
+                  <AddCard />
+                </TooltipButton>
+              </label>
+
               <TooltipButton
                 title="Download"
                 onClick={() => {
