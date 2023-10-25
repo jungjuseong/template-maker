@@ -159,24 +159,24 @@ const Canvas = ({
                         })}
                       />
                     );
-                  case 'line':
-                    return (
-                      <TransformableLine
-                        {...shape}
-                        draggable={draggable}
-                        key={shape.id!}
-                        mode={shape.mode}
-                        points={shape.points}
-                        isSelected={selected === shape.id}
-                        onDragStart={(e) => onDragStart(e, shape)}
-                        onDragEnd={(e) => onDragEnd(e)}
-                        onClick={() => setSelected(shape.id)}
-                        onTransform={(updated) => updateShape({
-                          ...updated,
-                          id: shape.id,
-                        })}
-                      />
-                    );
+                  // case 'line':
+                  //   return (
+                  //     <TransformableLine
+                  //       {...shape}
+                  //       draggable={draggable}
+                  //       key={shape.id!}
+                  //       mode={shape.mode}
+                  //       points={shape.points}
+                  //       isSelected={selected === shape.id}
+                  //       onDragStart={(e) => onDragStart(e, shape)}
+                  //       onDragEnd={(e) => onDragEnd(e)}
+                  //       onClick={() => setSelected(shape.id)}
+                  //       onTransform={(updated) => updateShape({
+                  //         ...updated,
+                  //         id: shape.id,
+                  //       })}
+                  //     />
+                  //   );
                   case 'text':
                     return (
                       <EditableText

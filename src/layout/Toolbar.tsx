@@ -7,7 +7,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import FlipToFrontIcon from '@mui/icons-material/FlipToFront';
 import FlipToBackIcon from '@mui/icons-material/FlipToBack';
 import CreateIcon from '@mui/icons-material/Create';
-import TextFieldsOutlinedIcon from '@mui/icons-material/TextFieldsOutlined';
+import Title from '@mui/icons-material/Title';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
@@ -125,7 +125,7 @@ export const Toolbar = () => {
         item.attrs.src = imageSrc;
       }
     })
-  
+
     const serialized = layer.toJSON();
 
     // console.log(`serialized %o`, serialized)
@@ -171,10 +171,10 @@ export const Toolbar = () => {
                   type: 'text',
                 })}
               >
-                <TextFieldsOutlinedIcon />
+                <Title />
               </TooltipButton>
 
-              <TooltipButton
+              {/* <TooltipButton
                 title="Drawing"
                 disabled={willDrawing || drawing}
                 onClick={() => {
@@ -184,7 +184,7 @@ export const Toolbar = () => {
                 }}
               >
                 <CreateIcon />
-              </TooltipButton>
+              </TooltipButton> */}
 
               &nbsp;
 
@@ -343,7 +343,7 @@ export const Toolbar = () => {
                     // shapeArr.map((shape) => {
                     //   console.log(`jsonLoaded - %s %o`, shape.type, shape);
                     //   if (shape.type === 'image') {
-                      
+
                     //     const image = new Image();
                     //     image.onload = () => {
                     //       shape.image = image;
