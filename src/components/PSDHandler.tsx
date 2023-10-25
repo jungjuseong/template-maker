@@ -2,26 +2,36 @@ import React, { ChangeEvent, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { ShapeConfig } from 'konva/lib/Shape';
 
-import Psd from "@webtoon/psd";
-import {createMessage, validateMessage} from "../showPSD/messaging";
+import Psd, { Node } from "@webtoon/psd";
 
-const workerCallback = ({data}: MessageEvent<any>) => {
-  const {type, value} = data;
-  validateMessage(data);
-  if (type === "Layer") {
-    const layer = value;
+const Input = styled('input')({
+  display: 'none',
+});
 
-    // -- Layers --
-    // element.insertAdjacentHTML("beforeend", `<h3>${layer.name} Layer</h3>`);
-    // element.insertAdjacentHTML(
-    //   "beforeend",
-    //   `<div><p class="layer-info">size : ${layer.width} x ${layer.height} | top: ${layer.top} | left: ${layer.left}</p></div>`
-    // );
-    // //console.time("Create and append <canvas> for layer");
-    // element.appendChild(generateCanvas(layer));
-    console.log(`%s layer %o`,layer.name, layer)
-    //console.timeEnd("Create and append <canvas> for layer");
-  }
+const generateImage = (layer: {
+  imageData?: Uint8ClampedArray;
+  width: number;
+  height: number;
+}) => {
+
+  console.log(layer);
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+  const {width, height, imageData: rgba} = layer;
+  const contextImageData = context.createImageData(width, height);
+
+  canvas.width = width;
+  canvas.height = height;
+
+  contextImageData.data.set(rgba);
+  context.putImageData(contextImageData, 0, 0);
+
+  var image = new Image();
+  image.src = canvas.toDataURL("image/png");
+
+  console.log(`image %o`, image);
+  return image;
 };
 
 const readFileAsArrayBuffer = (file: File) => {
@@ -44,10 +54,6 @@ const readFileAsArrayBuffer = (file: File) => {
   }
 }
 
-const Input = styled('input')({
-  display: 'none',
-});
-
 export function PSDHandler(props: {
   fileLoaded: (shapes: ShapeConfig[]) => void,
 }) {
@@ -55,32 +61,49 @@ export function PSDHandler(props: {
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] as File;
-    console.log(`handleChange %o`, file)
+    //console.log(`handleChange %o`, file)
 
     readFileAsArrayBuffer(file).then(async (buffer) => {
-      // worker.postMessage(createMessage("ParseData", buffer), [buffer]);
       const psd = Psd.parse(buffer);
-      // console.timeEnd("Parse PSD file");
-
-      console.log(`psd %o name(%s)`, psd, psd.name);
+      const formatted:ShapeConfig[] = [];
 
       for (const [index, layer] of psd.layers.entries()) {
         const pixelData = await layer.composite(true, true);
+        const image = generateImage(layer);
 
-        console.log(`layer %s %d %d %d %d`, layer.name, layer.left, layer.top, layer.width, layer.height);
-        // (self as unknown as Worker).postMessage(
-        //   createMessage("Layer", {
-        //     pixelData,
-        //     name: layer.name,
-        //     left: layer.left,
-        //     top: layer.top,
-        //     width: layer.width,
-        //     height: layer.height,
-        //   }),
-        //   [pixelData.buffer]
-        // );
-    }
-  });
+        console.log(`layer %s %d %d %d %d, %o`, layer.name, layer.left, layer.top, layer.width, layer.height, layer);
+        const shape:ShapeConfig = {
+          name: layer.name,
+          type: 'image',
+          image: image,
+          x: layer.left,
+          y: layer.top,
+          width: layer.width,
+          height: layer.height,
+          fill: '#924567',
+          opacity: 0.5
+          //opacity: layer.opacity / 255,
+        }
+
+        formatted.push(shape);
+
+        // const shape_name:ShapeConfig = {
+        //   type: 'text',
+        //   x: layer.left,
+        //   y: layer.top,
+        //   text: layer.name,
+        //   fontSize: 38,
+        //   width: layer.width,
+        //   height: layer.height,
+        //   fill: '#ffff22',
+        //   opacity: 1,
+        // }
+        // formatted.push(shape_name);
+
+        //console.log(`layer %s %d %d %d %d, %o`, layer.name, layer.left, layer.top, layer.width, layer.height, layer);
+      }
+      fileLoaded(formatted);
+    });
   }
 
   return (
