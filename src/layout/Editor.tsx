@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { InitialSetting } from '@types';
 
 import { Toolbar } from './Toolbar';
@@ -40,7 +40,7 @@ export const Editor = ({
     >
       <HistoryProvider>
         <ShapesProvider>
-          <Toolbar />
+          <Toolbar/>
           <div style={{
             display: 'flex',
             overflow: 'hidden',

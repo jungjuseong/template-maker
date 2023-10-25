@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2020",
     "lib": [
+      "es2020",
       "dom",
-      "dom.iterable", 
+      "dom.iterable",
       "esnext"
     ],
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
-    "module": "es6",
+    "module": "es2020",
     "outDir": "lib",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -27,6 +28,7 @@
     "src/**/*.ts",
     "src/**/*.tsx", "src/modules.d.ts",
   ],
+  "references": [{ "path": "./tsconfig.node.json" }],
   "exclude": [
     "node_modules"
   ]

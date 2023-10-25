@@ -853,6 +853,11 @@
     "@types/babel__core" "^7.20.2"
     react-refresh "^0.14.0"
 
+"@webtoon/psd@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@webtoon/psd/-/psd-0.4.0.tgz#855cb6541a67ce8add4be5d0c5b8e9eb0193cc8f"
+  integrity sha512-ztriE8oFOamRrV9opBURDy+JMiyhur2//vOXsC5CgdnYCB0L1Lnaag4NzP8N+NFCj7uNz9JRYtPmAbQMSDLIsQ==
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"

@@ -1,4 +1,9 @@
-# React + TypeScript + Vite
+# Template Maker for image banner
+
+input: PSD file
+output: konva-shaped json format
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

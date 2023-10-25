@@ -303,7 +303,6 @@ export const Toolbar = () => {
               </TooltipButton>
             </ButtonGroup>
 
-
             <ButtonGroup variant="contained" size="small">
             <label htmlFor="parsing_psd">
                 <PSDHandler

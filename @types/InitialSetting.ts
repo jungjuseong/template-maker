@@ -1,4 +1,5 @@
 export interface InitialSetting {
+  worker?: Worker;
   width?: number;
   height?: number;
   maxWidth?: number;
