@@ -6,9 +6,9 @@ const Input = styled('input')({
 });
 
 export function ImageHandler(props: {
-  onBase64ImageLoaded: (image: HTMLImageElement) => void,
+  onImageLoaded: (image: HTMLImageElement) => void,
 }) {
-  const { onBase64ImageLoaded } = props;
+  const { onImageLoaded } = props;
 
   const handleFileChange = useCallback((event) => {
     const [file] = event.target.files;
@@ -17,12 +17,9 @@ export function ImageHandler(props: {
     reader.onabort = () => console.log('file reading was aborted');
     reader.onerror = () => console.log('file reading has failed');
     reader.onload = () => {
-      const binaryStr = String(reader.result);
-      const base64 = binaryStr.split(',')[1];
-
       const image = new Image();
-      image.src = `data:image/png;base64,${base64}`;
-      image.onload = () => onBase64ImageLoaded(image);
+      image.src = String(reader.result);
+      image.onload = () => onImageLoaded(image);
     };
 
     reader.readAsDataURL(file);

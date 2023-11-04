@@ -1,10 +1,7 @@
 import Konva from 'konva';
-import React, {
-  useContext, useEffect, useState
-} from 'react';
+import  { useContext, useEffect, useState } from 'react';
 
 import { useIdCounter } from './useIdCounter';
-
 import { HistoryContext } from '../context/HistoryContext';
 
 export function useShapes() {
@@ -48,6 +45,7 @@ export function useShapes() {
   };
 
   const generateShape = <T extends Konva.ShapeConfig>(shape: T) => {
+
     if ('filters' in shape) {
       // eslint-disable-next-line no-param-reassign
       delete shape.filters;
@@ -74,21 +72,6 @@ export function useShapes() {
     };
 
     switch (shape.type) {
-      case 'circle':
-      case 'ellipse':
-        created = {
-          ...created,
-          ...shape,
-          type: 'ellipse',
-          y: shape.y ?? Math.random() * 100,
-          x: shape.x ?? Math.random() * 100,
-          rotation: shape.rotation ?? 0,
-          radiusX: shape.radiusX ?? 50,
-          radiusY: shape.radiusY ?? 50,
-          fill: shape.fill ?? defaultColor,
-        };
-        break;
-
       case 'rectangle':
       case 'rect':
         created = {
@@ -119,15 +102,6 @@ export function useShapes() {
           wrap: shape.wrap ?? 'word',
         };
         break;
-
-      case 'line':
-        created = {
-          ...created,
-          stroke: shape.stroke ?? '#637EF7',
-          ...shape,
-        };
-        break;
-
       case 'image':
         created = {
           ...created,
@@ -135,7 +109,7 @@ export function useShapes() {
           y: shape.x ?? Math.random() * 100,
           x: shape.y ?? Math.random() * 100,
           fill: undefined,
-        };
+        }
         break;
 
       default:
@@ -149,10 +123,7 @@ export function useShapes() {
     const created = ((Array.isArray(shape)) ? shape : [shape]).map((option) =>
       generateShape(option));
 
-    console.log(shapes.concat(created));
-
     setShapes(shapes.concat(created));
-
     saveHistory(shapes.concat(created));
 
     return created;

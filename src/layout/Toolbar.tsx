@@ -85,7 +85,7 @@ export const Toolbar = () => {
   } = useShapesContext();
 
   const handleAddShape = (configs: {[key: string]: any}) => {
-    const [shape] = addShape<Konva.ShapeConfig>({ ...configs });
+    const [shape] = addShape({ ...configs });
     setSelected(shape.id);
   };
 
@@ -120,7 +120,7 @@ export const Toolbar = () => {
     layer.children.map(item => {
       console.log(item.className)
       if (item.className === 'Image') {
-        const imageSrc = "data:image/jpg;base64," + btoa(item.attrs.image.src);
+        const imageSrc = item.attrs.image.src;
         console.log(`img src: %s`, imageSrc)
         item.attrs.src = imageSrc;
       }
@@ -190,9 +190,10 @@ export const Toolbar = () => {
 
               <label htmlFor="add-image">
                 <ImageHandler
-                  onBase64ImageLoaded={(image) => {
+                  onImageLoaded={(image) => {
 
-                    console.log(`addShape of image %o`, image)
+                    console.log(`addShape of image %o`, image);
+
                     handleAddShape({
                       type: 'image',
                       image,
@@ -337,23 +338,14 @@ export const Toolbar = () => {
 
               <label htmlFor="deserialize">
                 <JsonHandler
-                  jsonLoaded={(shapeArr) => {
-
-                    // shapeArr.map((shape) => {
-                    //   console.log(`jsonLoaded - %s %o`, shape.type, shape);
-                    //   if (shape.type === 'image') {
-
-                    //     const image = new Image();
-                    //     image.onload = () => {
-                    //       shape.image = image;
-
-                    //       addShape(shape);
-                    //       console.log(`image: %o`, image);
-                    //     } //onBase64ImageLoaded(image);
-                    //     image.src = shape.src;
-                    //   }
-                    // })
-                    addShape(shapeArr);
+                  onJsonLoaded={(shapes) => {
+                    addShape(shapes);
+                  }}
+                  onImageLoaded={(image, attrs) => {
+                    addShape({
+                      ...attrs,
+                      image
+                    });
                   }}
                 />
                 <TooltipButton

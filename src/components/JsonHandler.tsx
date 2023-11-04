@@ -1,15 +1,43 @@
 import React, { useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import { ShapeConfig } from 'konva/lib/Shape';
+import useImage from 'use-image';
 
 const Input = styled('input')({
   display: 'none',
 });
 
+const getFormatted = async (shapes:ShapeConfig[], onLoad) => {
+  try {
+    const formatted = shapes.map(shape => {
+      if (shape.attrs.type === 'image') {
+        const image = new window.Image();
+        image.src = shape.attrs.src;
+        image.onload = () => {
+          shape.attrs.image = image;
+          console.log(`1. onload`)
+        }
+      }
+      return shape.attrs;
+    })
+
+    await sleep(1000);
+    return formatted;
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
+function sleep(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function JsonHandler(props: {
-  jsonLoaded: (shapes: ShapeConfig[]) => void,
+  onJsonLoaded: (shapes: ShapeConfig[]) => void,
+  onImageLoaded: (image: HTMLImageElement, options: ShapeConfig) => void
 }) {
-  const { jsonLoaded } = props;
+  const { onJsonLoaded, onImageLoaded } = props;
 
   const handleFileChange = useCallback((event) => {
     const [file] = event.target.files;
@@ -20,23 +48,18 @@ export function JsonHandler(props: {
     reader.onload = () => {
       const result = JSON.parse(JSON.parse(String(reader.result)));
 
-      console.log(`json %o`, result);
-
       const formatted = result.children.map(shape => {
         if (shape.attrs.type === 'image') {
-          shape.attrs.fill = "#637EF7";
-          shape.attrs.type = "rectangle";
-          // const image = new Image();
-          // image.onload = () => {
-          //   shape.image = image;
-          //   console.log(`image on load: %o`, image);
-          // } //onBase64ImageLoaded(image);
-          // image.src = shape.src;
+          const image = new window.Image();
+          image.src = shape.attrs.src;
+          image.onload = () => {
+            onImageLoaded(image, shape.attrs);
+          }
         }
         return shape.attrs;
       });
 
-      jsonLoaded(formatted);
+      onJsonLoaded(formatted.filter((shape) => shape.type !== 'image'));
     };
 
     reader.readAsText(file);
