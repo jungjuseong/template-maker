@@ -1,8 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { Image, Transformer } from 'react-konva';
 import { Portal } from 'react-konva-utils';
 import Konva from 'konva';
-import useImage from 'use-image';
 
 import { useShapeCache, useTransformer } from '../hooks';
 
@@ -48,8 +47,6 @@ export const TransformableImage = ({
         onClick={onClick}
         onDragStart={onDragStart}
         onDragEnd={(e) => onDragEnd(e)}
-        // width={(src.width as number) * ratio}
-        // height={(src.height as number) * ratio}
         onTransformEnd={() => {
           const node = imageRef.current;
           const scaleX = node.scaleX();

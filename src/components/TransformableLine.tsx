@@ -27,16 +27,16 @@ export const TransformableLine = ({
   const lineRef = useRef<Konva.Line>();
   const transformerRef = useRef<Konva.Transformer>();
 
-  useTransformer({
-    isSelected,
-    ref: lineRef,
-    transformer: transformerRef,
-  });
+  // useTransformer({
+  //   isSelected,
+  //   ref: lineRef,
+  //   transformer: transformerRef,
+  // });
 
-  useShapeCache({
-    ref: lineRef,
-    deps: [isSelected, props],
-  });
+  // useShapeCache({
+  //   ref: lineRef,
+  //   deps: [isSelected, props],
+  // });
 
   return (
     <>

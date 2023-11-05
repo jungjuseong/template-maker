@@ -14,10 +14,8 @@ export function ImageHandler(props: {
     const [file] = event.target.files;
     const reader = new FileReader();
 
-    reader.onabort = () => console.log('file reading was aborted');
-    reader.onerror = () => console.log('file reading has failed');
     reader.onload = () => {
-      const image = new Image();
+      const image = new window.Image();
       image.src = String(reader.result);
       image.onload = () => onImageLoaded(image);
     };

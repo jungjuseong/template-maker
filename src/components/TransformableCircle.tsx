@@ -25,16 +25,16 @@ export const TransformableCircle = ({
   const circleRef = useRef<Konva.Ellipse>();
   const transformerRef = useRef<Konva.Transformer>();
 
-  useTransformer({
-    isSelected,
-    ref: circleRef,
-    transformer: transformerRef,
-  });
+  // useTransformer({
+  //   isSelected,
+  //   ref: circleRef,
+  //   transformer: transformerRef,
+  // });
 
-  useShapeCache({
-    ref: circleRef,
-    deps: [isSelected, props],
-  });
+  // useShapeCache({
+  //   ref: circleRef,
+  //   deps: [isSelected, props],
+  // });
 
   const snaps = Array(24).fill(0).map((_, i) => i * 15);
 

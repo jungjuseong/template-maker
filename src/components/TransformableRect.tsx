@@ -23,11 +23,11 @@ export const TransformableRect = ({
   const rectRef = useRef<Konva.Rect>();
   const transformerRef = useRef<Konva.Transformer>();
 
-  useTransformer({
-    isSelected,
-    ref: rectRef,
-    transformer: transformerRef,
-  });
+  // useTransformer({
+  //   isSelected,
+  //   ref: rectRef,
+  //   transformer: transformerRef,
+  // });
 
   useShapeCache({
     ref: rectRef,

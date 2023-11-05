@@ -1,11 +1,13 @@
 import React from 'react';
 import { Input, Divider, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 import { useShapesContext } from '../../context';
+import { useFilter } from '../../hooks';
 
-export function TextboxInfo() {
-
+export function TextboxInfo()
+{
   const { selected, getShapeById, updateShape } = useShapesContext();
   const selectedShape = getShapeById(selected);
+  const { applyFilter, previewFilter } = useFilter({ selected, updateShape });
 
   return (
     <div>
@@ -90,6 +92,22 @@ export function TextboxInfo() {
         />
       </label>
       <Divider/>
+
+      <label htmlFor="fill">
+        color
+        <Input
+          fullWidth
+          type="color"
+          name="fill"
+          value={selectedShape.fill}
+          onBlur={(e) => {
+            applyFilter({ type: 'fill' })(e.target.value);
+          }}
+          onChange={(e) => {
+            previewFilter({ type: 'fill' })(e.target.value);
+          }}
+        />
+      </label>
     </div>
   )
 }

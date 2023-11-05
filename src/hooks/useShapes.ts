@@ -4,8 +4,10 @@ import  { useContext, useEffect, useState } from 'react';
 import { useIdCounter } from './useIdCounter';
 import { HistoryContext } from '../context/HistoryContext';
 
+type ShapeConfig = Konva.ShapeConfig;
+
 export function useShapes() {
-  const [shapes, setShapes] = useState<Konva.ShapeConfig[]>([]);
+  const [shapes, setShapes] = useState<ShapeConfig[]>([]);
 
   const { generateId } = useIdCounter();
 
@@ -17,7 +19,7 @@ export function useShapes() {
 
   const getShapeById = (id: string) => shapes.find((shape) => shape.id === id);
 
-  const updateShape = <T extends Konva.ShapeConfig>(
+  const updateShape = <T extends ShapeConfig>(
     config: T & { id: string },
     options: {
       saveHistory: boolean;
@@ -44,52 +46,39 @@ export function useShapes() {
     return updated;
   };
 
-  const generateShape = <T extends Konva.ShapeConfig>(shape: T) => {
+  const DefaultAttrs = {
+    draggable: true,
+    shadowBlur: 0,
+    brightness: 0,
+    blur: 0,
+    contrast: 0,
+    pixelSize: 1,
+    fill: '#637EF7',
+  }
 
-    if ('filters' in shape) {
-      // eslint-disable-next-line no-param-reassign
-      delete shape.filters;
-    }
+  const generateShape = <T extends ShapeConfig>(shape: T) => {
 
-    console.log('generateShape');
-
-    const defaultColor = '#637EF7';
-    let created: Konva.ShapeConfig = {
-      id: shape.id ?? generateId(),
-      draggable: true,
-      shadowBlur: 0,
-      brightness: 0,
-      blur: 0,
-      contrast: 0,
-      pixelSize: 1,
-      fill: defaultColor,
-      filters: [
-        Konva.Filters.Blur,
-        shape.type !== 'text' &&  Konva.Filters.Brighten,
-        shape.type !== 'text' &&  Konva.Filters.Contrast,
-        shape.type !== 'text' &&  Konva.Filters.Pixelate,
-      ],
+    let createdShape: ShapeConfig = {
+      ...DefaultAttrs,
+      id: generateId(),
+      ...shape,
     };
 
     switch (shape.type) {
       case 'rectangle':
       case 'rect':
-        created = {
-          ...created,
-          ...shape,
+        createdShape = {
+          ...createdShape,
           type: 'rectangle',
           y: shape.y ?? Math.random() * 100,
           x: shape.x ?? Math.random() * 100,
-          width: shape.width ?? 50,
-          height: shape.height ?? 50,
           fill: shape.fill ?? '#637EF7',
         };
         break;
 
       case 'text':
-        created = {
-          ...created,
-          ...shape,
+        createdShape = {
+          ...createdShape,
           type: 'text',
           rotation: shape.rotation ?? 0,
           y: shape.y ?? Math.random() * 100,
@@ -103,11 +92,11 @@ export function useShapes() {
         };
         break;
       case 'image':
-        created = {
-          ...created,
-          ...shape,
+        createdShape = {
+          ...createdShape,
           y: shape.x ?? Math.random() * 100,
           x: shape.y ?? Math.random() * 100,
+
           fill: undefined,
         }
         break;
@@ -116,17 +105,19 @@ export function useShapes() {
         break;
     }
 
-    return created;
+    return createdShape;
   };
 
-  const addShape = <T extends Konva.ShapeConfig>(shape: T | T[]) => {
-    const created = ((Array.isArray(shape)) ? shape : [shape]).map((option) =>
-      generateShape(option));
+  const addShape = <T extends ShapeConfig>(shapeArr: T[]) => {
 
-    setShapes(shapes.concat(created));
-    saveHistory(shapes.concat(created));
+    const createdShapes = shapeArr.map((shape) =>
+      generateShape(shape));
 
-    return created;
+    const nextShapes = shapes.concat(createdShapes);
+    setShapes(nextShapes);
+    saveHistory(nextShapes);
+
+    return createdShapes;
   };
 
   // HistoryIndex 변하면 history 번째 인덱스꺼 가져와서 변화시키기
@@ -136,29 +127,32 @@ export function useShapes() {
 
   const toForward = (id: string) => {
     const shape = shapes.find((item) => item.id === id);
-    if (!shape) return;
-    const result = shapes.filter((item) => item.id !== id).concat([shape]);
-    setShapes(result);
-    saveHistory(result);
+    if (shape) {
+      const result = shapes.filter((item) => item.id !== id).concat([shape]);
+      setShapes(result);
+      saveHistory(result);
+    }
   };
 
   const toBackward = (id: string) => {
     const shape = shapes.find((item) => item.id === id);
-    if (!shape) return;
-    const result = [shape].concat(shapes.filter((item) => item.id !== id));
-    setShapes(result);
-    saveHistory(result);
+    if (shape) {
+      const result = [shape].concat(shapes.filter((item) => item.id !== id));
+      setShapes(result);
+      saveHistory(result);
+    }
   };
 
   const removeShape = (id: string) => {
     const shape = shapes.find((item) => item.id === id);
-    if (!shape) return;
-    const result = shapes.filter((item) => item.id !== id);
-    setShapes(result);
-    saveHistory(result);
+    if (shape) {
+      const result = shapes.filter((item) => item.id !== id);
+      setShapes(result);
+      saveHistory(result);
+    }
   };
 
-  const duplicateShape = (id: string): Konva.ShapeConfig => {
+  const duplicateShape = (id: string): ShapeConfig => {
     const shape = shapes.find((item) => item.id === id);
     const created = {
       ...shape,

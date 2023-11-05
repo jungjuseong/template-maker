@@ -1,8 +1,10 @@
 import React, { ChangeEvent, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { ShapeConfig } from 'konva/lib/Shape';
-
+import Konva from 'konva';
 import Psd, { Node } from "@webtoon/psd";
+
+type ShapeConfig = Konva.ShapeConfig;
+
 
 const Input = styled('input')({
   display: 'none',
@@ -55,7 +57,7 @@ const readFileAsArrayBuffer = (file: File) => {
 }
 
 export function PSDHandler(props: {
-  fileLoaded: (shapes: ShapeConfig[]) => void,
+  fileLoaded: (shapes: Konva.ShapeConfig[]) => void,
 }) {
   const { fileLoaded } = props;
 

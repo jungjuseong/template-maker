@@ -6,7 +6,6 @@ import {
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import FlipToFrontIcon from '@mui/icons-material/FlipToFront';
 import FlipToBackIcon from '@mui/icons-material/FlipToBack';
-import CreateIcon from '@mui/icons-material/Create';
 import Title from '@mui/icons-material/Title';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
@@ -21,7 +20,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
-import Konva from 'konva';
 
 import { HistoryContext, useShapesContext } from '../context';
 import { ImageHandler } from '../components';
@@ -79,15 +77,15 @@ export const Toolbar = () => {
     unselect, unfocus, zoomIn, zoomOut,
     canZoomIn, canZoomOut,
     toForward, toBackward,
-    setWillDrawing, willDrawing, drawing,
     layer, removeShape, duplicateShape,
     stage,
   } = useShapesContext();
 
   const handleAddShape = (configs: {[key: string]: any}) => {
-    const [shape] = addShape({ ...configs });
+    const [shape] = addShape([{ ...configs }]);
+    console.log(`handleAddShape: %o`, {...configs});
     setSelected(shape.id);
-  };
+  }
 
   const downloadURI = (uri, name) => {
     const link = document.createElement('a');
@@ -96,12 +94,12 @@ export const Toolbar = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }
 
   const downloadImage = () => {
     const base64 = stage.toDataURL();
     downloadURI(base64, 'image.png');
-  };
+  }
 
   const darkTheme = createTheme({
     palette: {
@@ -113,29 +111,23 @@ export const Toolbar = () => {
         main: '#f50057',
       },
     },
-  });
+  })
 
   const serialize = () => {
 
     layer.children.map(item => {
       console.log(item.className)
       if (item.className === 'Image') {
-        const imageSrc = item.attrs.image.src;
-        console.log(`img src: %s`, imageSrc)
-        item.attrs.src = imageSrc;
+        item.attrs.src = item.attrs.image.src;;
       }
     })
 
-    const serialized = layer.toJSON();
-
-    // console.log(`serialized %o`, serialized)
-
     const blob = new Blob([
-      JSON.stringify(serialized),
+      JSON.stringify(layer.toJSON()),
     ], { type: 'application/json' });
 
     downloadURI(URL.createObjectURL(blob), 'image.json');
-  };
+  }
 
   return (
     <>
@@ -174,26 +166,11 @@ export const Toolbar = () => {
                 <Title />
               </TooltipButton>
 
-              {/* <TooltipButton
-                title="Drawing"
-                disabled={willDrawing || drawing}
-                onClick={() => {
-                  unselect();
-                  unfocus();
-                  setWillDrawing(true);
-                }}
-              >
-                <CreateIcon />
-              </TooltipButton> */}
-
               &nbsp;
 
               <label htmlFor="add-image">
                 <ImageHandler
-                  onImageLoaded={(image) => {
-
-                    console.log(`addShape of image %o`, image);
-
+                  onImageLoaded={(image: HTMLImageElement) => {
                     handleAddShape({
                       type: 'image',
                       image,
@@ -338,14 +315,16 @@ export const Toolbar = () => {
 
               <label htmlFor="deserialize">
                 <JsonHandler
-                  onJsonLoaded={(shapes) => {
-                    addShape(shapes);
+                  onJsonLoaded={(shapeArr) => {
+                    addShape(shapeArr);
                   }}
                   onImageLoaded={(image, attrs) => {
-                    addShape({
+                    const options = {
                       ...attrs,
-                      image
-                    });
+                      image: image
+                    }
+                    console.log(`onImageLoaded - %o,%o`, options, image.src.split(",")[0])
+                    addShape([options]);
                   }}
                 />
                 <TooltipButton

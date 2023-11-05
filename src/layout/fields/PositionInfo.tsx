@@ -7,6 +7,7 @@ export const PositionInfo = (
   {id,x,y,width,height}:
   {
     id: string;
+    name: string;
     x: number;
     y: number;
     width: number;
@@ -18,17 +19,27 @@ export const PositionInfo = (
 
   return (
     <div>
+      <label htmlFor="name">
+        name: <Input
+          type="string"
+          name="name"
+          value={ selectedShape.name }
+          onChange={(e) => {
+            updateShape({
+              id: selectedShape.id,
+              name: e.target.value
+            })
+          }}
+        />
+      </label>
+      <Divider/>
       <label htmlFor="x">
           x: <Input id="position-input-x-label"
-
             type="number"
             name="x"
             value={ x && Math.trunc(x)}
             onChange={(e) => {
-              // updateShape({
-              //   id: selectedShape.id,
-              //   x: selectedShape.x && valueFilter(e.target.value)
-              // })
+
             }}
           />
         </label>
@@ -39,10 +50,6 @@ export const PositionInfo = (
             name="y"
             value={ y && Math.trunc(y)}
             onChange={(e) => {
-              // updateShape({
-              //   id: selectedShape.id,
-              //   y: selectedShape.y && valueFilter(e.target.value)
-              // })
             }}
           />
         </label>

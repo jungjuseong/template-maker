@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import { ShapeConfig } from 'konva/lib/Shape';
-import useImage from 'use-image';
 
 const Input = styled('input')({
   display: 'none',
@@ -35,7 +34,7 @@ function sleep(ms){
 
 export function JsonHandler(props: {
   onJsonLoaded: (shapes: ShapeConfig[]) => void,
-  onImageLoaded: (image: HTMLImageElement, options: ShapeConfig) => void
+  onImageLoaded: (imageShape: ShapeConfig) => void
 }) {
   const { onJsonLoaded, onImageLoaded } = props;
 
@@ -43,23 +42,36 @@ export function JsonHandler(props: {
     const [file] = event.target.files;
     const reader = new FileReader();
 
-    reader.onabort = () => console.log('file reading was aborted');
-    reader.onerror = () => console.log('file reading has failed');
     reader.onload = () => {
       const result = JSON.parse(JSON.parse(String(reader.result)));
+      const shapes = result.children.filter(item => item.className !== 'Group');
+      console.log(`shapes - %o`, shapes)
 
-      const formatted = result.children.map(shape => {
+      const formatted = shapes.map((shape) => {
+
         if (shape.attrs.type === 'image') {
-          const image = new window.Image();
-          image.src = shape.attrs.src;
-          image.onload = () => {
-            onImageLoaded(image, shape.attrs);
-          }
+          shape.attrs.type = 'rectangle';
+          // const image = new window.Image();
+          // image.src = shape.attrs.src;
+          // image.onload = async () => {
+          //   shape.attrs = {
+          //     ...shape.attrs,
+          //     image
+          //   }
+          //   console.log(`onload - %o`, shape.attrs)
+            //onImageLoaded(img);
+          // }
         }
-        return shape.attrs;
-      });
+        // await sleep(2000);
 
-      onJsonLoaded(formatted.filter((shape) => shape.type !== 'image'));
+        return shape.attrs;
+      })
+
+
+      const imageRemoved = formatted.filter((shape) => shape.type !== 'image');
+      console.log(`imageRemoved - %o`, imageRemoved);
+
+      onJsonLoaded(imageRemoved);
     };
 
     reader.readAsText(file);

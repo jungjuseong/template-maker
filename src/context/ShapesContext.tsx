@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext } from 'react';
 import Konva from 'konva';
 
 import {
-  useDraggable, useShapes, useFocusable, useZoom, useDrawing, useStage
+  useDraggable, useShapes, useFocusable, useZoom, useStage, useDrawing
 } from '../hooks';
 
 interface IShapesContext {
